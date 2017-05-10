@@ -7,7 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 
 
 function [results] = msd_jd_analysis(parameters,param_guess1,param_guess2,param_guess3,results,setup,multStacks)
@@ -18,8 +18,8 @@ directory = strcat(parameters.exp_name,'/','spot detection Results');
 [list_dir,folders] = get_folders_folders('all',directory);
 
 
-max_step = parameters.step; 
-n_fit = parameters.n_fit;       
+max_step = parameters.step;
+n_fit = parameters.n_fit;
 plot_average = 1;  %Plots average of D over tracks if set to 1
 
 threshold_tracklength = parameters.threshold_tracklength;  %defines minimum length of track to be taken into account
@@ -34,12 +34,12 @@ threshold_tracklength = parameters.threshold_tracklength;  %defines minimum leng
 %Alex:Changed this so it analyses each input tiff stack seperately and
 %saves results in separate folders
 for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
-    
+
     dt = parameters.time(ndir)/1000;
-    
+
     parameters.t_max_step = [1:max_step].*dt;
     parameters.t_n_fit = [1:n_fit].*dt;
-    
+
     track_numbers = [];
     msd=[];
     se=[];
@@ -50,37 +50,37 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
     count = 1;
     ncells=0;
 
-    
-    
+
+
     current_folder = folders{ndir};
     current_directory = list_dir{ndir}; %'spot detection Results\test_TL_2\Results_tracking'
-    
+
     for ndirndir = 1:size(current_directory,2)
     ncells=ncells+1;
-    current_directory_directory = current_directory{ndirndir};  
+    current_directory_directory = current_directory{ndirndir};
     %current_folder_folder = current_folder{ndirndir};
-    
+
     [tracks,tracksname] = load_tracks(current_directory_directory);
     Ltracks = size(tracks,2);
     track_numbers=[track_numbers Ltracks];
-    
- 
-    for ntrack = 1:Ltracks,      
+
+
+    for ntrack = 1:Ltracks,
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % The program passes each track to get_msd, which calculates the msd, the
-        % standard error in the msd for that track, and fits the first n_fit points 
+        % standard error in the msd for that track, and fits the first n_fit points
         % of the msd curve, giving msd = gradient x time + offset. And gradient in
         % 2 dimensions equals 4D
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         current_track = tracks{ntrack};
-    
+
         %%%%if it starts at t=1, the first frame, delete first frame, since
         %%%%the time difference between the first two frames is different
         %%%%because of the camera read out time
         if current_track(1,1)==1
             current_track(1,:)=[];
-        end  
+        end
 
         t_temp = current_track(:,1);
         t = t_temp-t_temp(1)+1;
@@ -90,26 +90,26 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
         %only tracks longer than threshold value are analysed
         if length(x) >= threshold_tracklength;
 
-        
+
         [msd_temp,se_temp,grad_temp,err_grad_temp,offset_temp] = get_msd(t,x,y,parameters,ndir);
-       
+
         jump = get_jump3(t,x,y,parameters);
 
         jump_all = [ jump_all jump ];
-        
+
         grad(count)= grad_temp;
         err_grad(count) = err_grad_temp;
         offset(count) = offset_temp;
         msd{count} = msd_temp; %final msd values
-        se{count} = se_temp;   
-         
+        se{count} = se_temp;
+
         matrix(count,:) = [length(x),grad(count)./4];
         track_lengths = [ track_lengths length(x)];
         count = count +1;
-        
+
         end
     end
-    end  
+    end
 
 %final diffusion coefficients are calculated
 
@@ -151,7 +151,7 @@ for irow = 1:count-1
     matrix_se(irow,icol)=temp(icol);
     end
 end
-    
+
 if parameters.bool_D==1
     parameters.max_step=size(matrix_msd,2);
     parameters.t_max_step = [1:parameters.max_step].*dt;
@@ -167,7 +167,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Finally we plot and save the histogram of the diffusion coefficients 
+% Finally we plot and save the histogram of the diffusion coefficients
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -204,8 +204,8 @@ xlabel('log(D ({\mu}m^2*s^{-1}))')
 saveas(gcf,strcat(save_name_MSD,'MSD_Histogram_log.fig'))
 
 
-        
-        
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % We determine the positional accuracy using the intercept of the MSD plot
 % and plot the results in a histogram
@@ -232,15 +232,15 @@ title('Scatterplot','fontsize',12,'fontweight','b');
 ylabel('Standard deviation [nm]','fontsize',12,'fontweight','b');
 xlabel('Track length [frames]','fontsize',12,'fontweight','b');
 saveas(gcf,strcat(save_name_MSD,'Scatterplot'));
-        
-        
+
+
 %SCATTERPLOT
 
 figure, plot(track_lengths,diff,'o');
 title('Scatterplot 2','fontsize',12,'fontweight','b');
 ylabel('Diffusion Coefficient [{\mu}m^2*s^{-1}]','fontsize',12,'fontweight','b');
 xlabel('Track length [frames]','fontsize',12,'fontweight','b');
-saveas(gcf,strcat(save_name_MSD,'Scatterplot2'));    
+saveas(gcf,strcat(save_name_MSD,'Scatterplot2'));
 
 
 
@@ -254,18 +254,18 @@ f_JD_2pop = [];
 f_JD_3pop = [];
 
 plot_hist_jump1(jump_all,1,dt.*parameters.JD,param_guess1);
-saveas(gcf,strcat(save_name_JD,'Histogram_fit1')); 
+saveas(gcf,strcat(save_name_JD,'Histogram_fit1'));
 [param] = cumulative_fit_1( jump_all,dt.*parameters.JD,param_guess1,ndir,multStacks );
 saveas(gcf,strcat(save_name_JD,'Cumulative_fit1'));
 
 D_JD_1pop = param(1);
 
 if parameters.number_populations > 1
-    
+
 plot_hist_jump2(jump_all,1,dt.*parameters.JD,param_guess2);
-saveas(gcf,strcat(save_name_JD,'Histogram_fit2')); 
+saveas(gcf,strcat(save_name_JD,'Histogram_fit2'));
 [param] = cumulative_fit_2(jump_all,dt.*parameters.JD,param_guess2,ndir,multStacks);
-saveas(gcf,strcat(save_name_JD,'Cumulative_fit2')); 
+saveas(gcf,strcat(save_name_JD,'Cumulative_fit2'));
 
 D_JD_2pop = [param(1) param(3)];
 f_JD_2pop = [param(2) param(4)];
@@ -273,7 +273,7 @@ f_JD_2pop = [param(2) param(4)];
 end
 
 if parameters.number_populations > 2
-    
+
 [param] = cumulative_fit_3( jump_all,dt.*parameters.JD,param_guess3,ndir,multStacks );
 saveas(gcf,strcat(save_name_JD,'Cumulative_fit3'))
 
@@ -300,16 +300,3 @@ results.n_tracks = n_tracks;
 savefile = strcat(parameters.exp_name,'/','Results.mat');
 save(savefile, 'setup','parameters','results');
 end
- 
-
-
-
-
-
-
-
-
-
-    
-
-

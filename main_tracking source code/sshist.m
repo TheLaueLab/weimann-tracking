@@ -3,12 +3,12 @@ function [optN, C, N] = sshist(x,N)
 %
 % Function `sshist' returns optimal number of bins in a histogram
 % used for density estimation.
-% Optimization principle is to minimize expected L2 loss function between 
+% Optimization principle is to minimize expected L2 loss function between
 % the histogram and an unknown underlying density function.
 % An assumption made is merely that samples are drawn from the density
 % independently each other.
 %
-% The optimal binwidth D* is obtained as a minimizer of the formula, 
+% The optimal binwidth D* is obtained as a minimizer of the formula,
 % (2K-V) / D^2,
 % where K and V are mean and variance of sample counts across bins with width D.
 % Optimal number of bins is given as (max(x) - min(x)) / D*.
@@ -24,8 +24,8 @@ function [optN, C, N] = sshist(x,N)
 % Input argument
 % x:    Sample data vector.
 % N (optinal):
-%       A vector that specifies the number of bins to be examined. 
-%       The optimal number of bins is selected from the elements of N.  
+%       A vector that specifies the number of bins to be examined.
+%       The optimal number of bins is selected from the elements of N.
 %       Default value is N = 2:50.
 %       * Do not search binwidths smaller than a sampling resolution of data.
 %
@@ -49,12 +49,12 @@ if nargin < 2
     buf = abs(diff(sort(x)));
     dx = min(buf(logical(buf ~= 0)));
     N_MIN = 2;              % Minimum number of bins (integer)
-                            % N_MIN must be more than 1 (N_MIN > 1).            
+                            % N_MIN must be more than 1 (N_MIN > 1).
     N_MAX = min(floor((x_max - x_min)/(2*dx)),50);
                             % Maximum number of bins (integer)
     N = N_MIN:N_MAX;        % # of Bins
 end
-    
+
 SN = 30;                    % # of partitioning positions for shift average
 D = (x_max - x_min) ./ N;   % Bin Size Vector
 

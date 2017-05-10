@@ -13,7 +13,7 @@ if isdir(directory_name)~=1,
 else
     count = 1;
     indicator = 1;
-    while indicator ==1,       
+    while indicator ==1,
         if isdir(strcat(directory_name,'_',num2str(count)))==1,
             count = count + 1;
         else
@@ -23,7 +23,7 @@ else
             indicator = 0;
         end
     end
-end       
+end
 
 directory_name = strcat(parameters.exp_name,'/','JD Analysis Results/',newFolder,'/');
 
@@ -33,7 +33,7 @@ if isdir(directory_name)~=1,
 else
     count = 1;
     indicator = 1;
-    while indicator ==1,       
+    while indicator ==1,
         if isdir(strcat(directory_name,'_',num2str(count)))==1,
             count = count + 1;
         else
@@ -43,7 +43,4 @@ else
             indicator = 0;
         end
     end
-end     
-
-
-
+end

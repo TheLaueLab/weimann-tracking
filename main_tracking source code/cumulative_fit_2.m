@@ -20,9 +20,9 @@ D=lsqnonlin(@(D) D(2)*(1-exp(-x.^2/(4*D(1)*t))) +  D(4)*(1-exp(-x.^2/(4*D(3)*t))
 param = D;
 
 %%%Plot Fit result
-g1 = param(2)*(1-exp(-x.^2/(4*param(1)*t)));  
-g2 = param(4)*(1-exp(-x.^2/(4*param(3)*t))); 
-fit = g1 + g2; 
+g1 = param(2)*(1-exp(-x.^2/(4*param(1)*t)));
+g2 = param(4)*(1-exp(-x.^2/(4*param(3)*t)));
+fit = g1 + g2;
 hold all;
 plot(x,g1);
 plot(x,g2);
@@ -44,13 +44,13 @@ title(['D_1 = ', Print_two_digits(param(1)), ' {\mu}m^2*s^{-1}', ', f_1 = ', Pri
 %coefficient number is known beforehand
 
 Columns = ['A','E','I','M','Q','U','Y'];
-    
+
 diffCoeff = [param(1),param(3), param(2)];
 whichXLrow = strcat(Columns(ndir),num2str(multStacks));
 disp (whichXLrow);
 xlswrite(strcat(parameters.exp_name,'/Diffusion2.xlsx'),diffCoeff,1,whichXLrow);
 
-hold off; 
+hold off;
 
 %calculate fit statistics
 residual = y - fit;

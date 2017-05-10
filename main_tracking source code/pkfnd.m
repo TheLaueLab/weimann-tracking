@@ -1,5 +1,5 @@
 function out=pkfnd(im,th,sz)
-% finds local maxima in an image to pixel level accuracy.   
+% finds local maxima in an image to pixel level accuracy.
 %  this provides a rough guess of particle
 %  centers to be used by cntrd.m.  Inspired by the lmx subroutine of Grier
 %  and Crocker's feature.pro
@@ -7,7 +7,7 @@ function out=pkfnd(im,th,sz)
 % im: image to process, particle should be bright spots on dark background with little noise
 %   ofen an bandpass filtered brightfield image (fbps.m, fflt.m or bpass.m) or a nice
 %   fluorescent image
-% th: the minimum brightness of a pixel that might be local maxima. 
+% th: the minimum brightness of a pixel that might be local maxima.
 %   (NOTE: Make it big and the code runs faster
 %   but you might miss some particles.  Make it small and you'll get
 %   everything and it'll be slow.)
@@ -20,7 +20,7 @@ function out=pkfnd(im,th,sz)
 %           out(:,2) are the y-coordinates of the maxima
 %CREATED: Eric R. Dufresne, Yale University, Feb 4 2005
 %MODIFIED: ERD, 5/2005, got rid of ind2rc.m to reduce overhead on tip by
-%  Dan Blair;  added sz keyword 
+%  Dan Blair;  added sz keyword
 % ERD, 6/2005: modified to work with one and zero peaks, removed automatic
 %  normalization of image
 % ERD, 6/2005: due to popular demand, altered output to give x and y
@@ -34,7 +34,7 @@ function out=pkfnd(im,th,sz)
 
 
 %find all the pixels above threshold
-%im=im./max(max(im)); 
+%im=im./max(max(im));
 ind=find(im > th);
 [nr,nc]=size(im);
 tst=zeros(nr,nc);
@@ -56,7 +56,7 @@ for i=1:n
         if im(r,c)>=im(r-1,c-1) & im(r,c)>=im(r,c-1) & im(r,c)>=im(r+1,c-1) & ...
          im(r,c)>=im(r-1,c)  & im(r,c)>=im(r+1,c) &   ...
          im(r,c)>=im(r-1,c+1) & im(r,c)>=im(r,c+1) & im(r,c)>=im(r+1,c+1)
-        mx=[mx,[r,c]']; 
+        mx=[mx,[r,c]'];
         %tst(ind(i))=im(ind(i));
         end
     end
@@ -70,12 +70,12 @@ mx=mx';
 if nargin==3 & npks>0
    %throw out all pks within sz of boundary;
     ind=find(mx(:,1)>sz & mx(:,1)<(nr-sz) & mx(:,2)>sz & mx(:,2)<(nc-sz));
-    mx=mx(ind,:); 
+    mx=mx(ind,:);
 end
 
 %prevent from finding peaks within size of each other
 [npks,crap]=size(mx);
-if npks > 1 
+if npks > 1
     %CREATE AN IMAGE WITH ONLY PEAKS
     nmx=npks;
     tmp=0.*im;

@@ -7,7 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 
 
 function [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,multStacks)
@@ -18,8 +18,8 @@ directory = strcat(parameters.exp_name,'/','spot detection Results');
 [list_dir,folders] = get_folders_folders('all',directory);
 LocationTracking = parameters.locationtracking;
 
-max_step = parameters.step; 
-n_fit = parameters.n_fit;       
+max_step = parameters.step;
+n_fit = parameters.n_fit;
 plot_average = 1;  %Plots average of D over tracks if set to 1
 
 threshold_tracklength = parameters.threshold_tracklength;  %defines minimum length of track to be taken into account
@@ -34,12 +34,12 @@ threshold_tracklength = parameters.threshold_tracklength;  %defines minimum leng
 %Alex:Changed this so it analyses each input tiff stack seperately and
 %saves results in separate folders
 for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
-    
+
     dt = parameters.time(ndir)/1000;
-    
+
     parameters.t_max_step = [1:max_step].*dt;
     parameters.t_n_fit = [1:n_fit].*dt;
-    
+
     track_numbers = [];
     msd=[];
     se=[];
@@ -59,19 +59,19 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
     plotN=[];
     plotNM=[];
     locationCount = 1;
-    
+
     current_folder = folders{ndir};
     current_directory = list_dir{ndir}; %'spot detection Results\test_TL_2\Results_tracking'
-    
+
     for ndirndir = 1:size(current_directory,2)
     ncells=ncells+1;
-    current_directory_directory = current_directory{ndirndir};  
+    current_directory_directory = current_directory{ndirndir};
     %current_folder_folder = current_folder{ndirndir};
-    
+
     [tracks,tracksname] = load_tracks(current_directory_directory);
     Ltracks = size(tracks,2);
     track_numbers=[track_numbers Ltracks];
-    
+
     h = waitbar(0,'Checking range');
     NumTracks = 1;
     for Ntrack = 1:Ltracks
@@ -82,7 +82,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
         Xcols = X';
         Y = thisTrack(:,3);
         Ycols = Y';
-        
+
         if length(X) >=threshold_tracklength
             clear TrackNo
             All_Xes = [All_Xes Xcols];
@@ -92,21 +92,21 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
                 TrackNo(o) = NumTracks;
             end
             whichTrack = [whichTrack TrackNo];
-            
+
             allTracks{NumTracks} = [T X Y];
             NumTracks = NumTracks + 1;
         end
-        
+
         waitbar(Ntrack/Ltracks,h)
     end
-    
+
     myTracks = [whichTrack' All_Ts' All_Xes' All_Ys'];
-        
+
     close(h)
-        
+
         XrangeYrange = [min(All_Xes)-(parameters.heatmapRadius.*3), max(All_Xes)+(parameters.heatmapRadius.*3),min(All_Ys)-(parameters.heatmapRadius.*3),max(All_Ys)+(parameters.heatmapRadius.*3)];
-        
-        
+
+
         if LocationTracking == 1
            h = waitbar(XrangeYrange(3)./XrangeYrange(4),'Loading Heatmap')
             for whYs = XrangeYrange(3):parameters.heatmapDensity:XrangeYrange(4) %for each Y
@@ -128,11 +128,11 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
                                     unique = unique+1;
                                 end
                             end
-                                
- 
+
+
                             [jumpAll, NumMolecules] = get_jump_location(TrackIndex,allTracks,NumTracks,parameters, eXes, whYs);
 
-                        
+
 
 
                        if sum(jumpAll) ~= 0
@@ -143,19 +143,19 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
                        elseif sum(jumpAll)==0 && NumMolecules ~=0
                            heatMatrix{locationCount} = [eXes, whYs, 0,0,NumMolecules];
                            locationCount = locationCount + 1;
-                           
+
                        else
                             heatMatrix{locationCount} = [eXes, whYs, 0, 0,0];
                             locationCount = locationCount + 1;
                        end
-                       
-                       
-                       
+
+
+
                        else
                            heatMatrix{locationCount} = [eXes, whYs, 0,0,0];
                            locationCount = locationCount + 1;
                        end
-                           
+
 
 
 
@@ -169,19 +169,19 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
                 waitbar (whYs/XrangeYrange(4),h)
 
             end
-            
+
             close (h)
         end
-            
 
-        for ntrack = 1:Ltracks,      
+
+        for ntrack = 1:Ltracks,
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % The program passes each track to get_msd, which calculates the msd, the
-            % standard error in the msd for that track, and fits the first n_fit points 
+            % standard error in the msd for that track, and fits the first n_fit points
             % of the msd curve, giving msd = gradient x time + offset. And gradient in
             % 2 dimensions equals 4D
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             current_track = tracks{ntrack};
 
             %%%%if it starts at t=1, the first frame, delete first frame, since
@@ -189,7 +189,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
             %%%%because of the camera read out time
             if current_track(1,1)==1
                 current_track(1,:)=[];
-            end  
+            end
 
             t_temp = current_track(:,1);
             t = t_temp-t_temp(1)+1;
@@ -212,7 +212,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
             err_grad(count) = err_grad_temp;
             offset(count) = offset_temp;
             msd{count} = msd_temp; %final msd values
-            se{count} = se_temp;   
+            se{count} = se_temp;
 
             matrix(count,:) = [length(x),grad(count)./4];
             track_lengths = [ track_lengths length(x)];
@@ -220,7 +220,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
 
             end
         end
-  
+
     end
 
 
@@ -229,7 +229,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
             if ~isempty(heatMatrix{k})
                 plotX = [plotX heatMatrix{k}(1)];
                 plotY = [plotY heatMatrix{k}(2)];
-                plotZ = [plotZ heatMatrix{k}(3)]; 
+                plotZ = [plotZ heatMatrix{k}(3)];
                 plotN = [plotN heatMatrix{k}(4)];
                 plotNM = [plotNM heatMatrix{k}(5)];
             end
@@ -323,7 +323,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
 
 
 
-    
+
 
 %final diffusion coefficients are calculated
 
@@ -381,7 +381,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
 
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Finally we plot and save the histogram of the diffusion coefficients 
+    % Finally we plot and save the histogram of the diffusion coefficients
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -454,7 +454,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
     title('Scatterplot 2','fontsize',12,'fontweight','b');
     ylabel('Diffusion Coefficient [{\mu}m^2*s^{-1}]','fontsize',12,'fontweight','b');
     xlabel('Track length [frames]','fontsize',12,'fontweight','b');
-    saveas(gcf,strcat(save_name_MSD,'Scatterplot2'));    
+    saveas(gcf,strcat(save_name_MSD,'Scatterplot2'));
 
 
 
@@ -468,7 +468,7 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
     f_JD_3pop = [];
 
     plot_hist_jump1(jump_all,1,dt.*parameters.JD,param_guess1);
-    saveas(gcf,strcat(save_name_JD,'Histogram_fit1')); 
+    saveas(gcf,strcat(save_name_JD,'Histogram_fit1'));
     [param] = cumulative_fit_1( jump_all,dt.*parameters.JD,param_guess1,ndir,multStacks,parameters );
     saveas(gcf,strcat(save_name_JD,'Cumulative_fit1'));
 
@@ -477,9 +477,9 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
     if parameters.number_populations > 1
 
     plot_hist_jump2(jump_all,1,dt.*parameters.JD,param_guess2);
-    saveas(gcf,strcat(save_name_JD,'Histogram_fit2')); 
+    saveas(gcf,strcat(save_name_JD,'Histogram_fit2'));
     [param] = cumulative_fit_2(jump_all,dt.*parameters.JD,param_guess2,ndir,multStacks,parameters);
-    saveas(gcf,strcat(save_name_JD,'Cumulative_fit2')); 
+    saveas(gcf,strcat(save_name_JD,'Cumulative_fit2'));
 
     D_JD_2pop = [param(1) param(3)];
     f_JD_2pop = [param(2) param(4)];
@@ -516,16 +516,3 @@ for ndir = 1:size(list_dir,2), %loop over all folders which contain keyword
 end
 
 end
- 
-
-
-
-
-
-
-
-
-
-    
-
-

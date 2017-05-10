@@ -15,10 +15,10 @@ D=lsqnonlin(@(D) D(2)*(1-exp(-x.^2/(4*D(1)*t))) +  D(4)*(1-exp(-x.^2/(4*D(3)*t))
 param = D;
 
 %%%Plot Fit result
-g1 = param(2)*(1-exp(-x.^2/(4*param(1)*t)));  
-g2 = param(4)*(1-exp(-x.^2/(4*param(3)*t))); 
-g3 = param(6)*(1-exp(-x.^2/(4*param(5)*t))); 
-fit = g1 + g2 + g3; 
+g1 = param(2)*(1-exp(-x.^2/(4*param(1)*t)));
+g2 = param(4)*(1-exp(-x.^2/(4*param(3)*t)));
+g3 = param(6)*(1-exp(-x.^2/(4*param(5)*t)));
+fit = g1 + g2 + g3;
 hold all;
 plot(x,g1);
 plot(x,g2);
@@ -41,13 +41,13 @@ ylabel('Frequency','fontsize',12,'fontweight','b')
 %coefficient number is known beforehand
 
 Columns = ['A','G','M','S','Y'];
-    
+
 diffCoeff = [param(1),fraction_1, param(3), fraction_2, param(5)];
 whichXLrow = strcat(Columns(ndir),num2str(multStacks));
 disp (whichXLrow);
 xlswrite(strcat(parameters.exp_name,'/Diffusion3.xlsx'),diffCoeff,1,whichXLrow);
 
-hold off; 
+hold off;
 
 %calculate fit statistics
 residual = y - fit;

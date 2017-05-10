@@ -1,12 +1,12 @@
 function res = bpass(image_array,lnoise,lobject,threshold)
-% 
+%
 % NAME:
 %               bpass
 % PURPOSE:
-%               Implements a real-space bandpass filter that suppresses 
-%               pixel noise and long-wavelength image variations while 
+%               Implements a real-space bandpass filter that suppresses
+%               pixel noise and long-wavelength image variations while
 %               retaining information of a characteristic size.
-% 
+%
 % CATEGORY:
 %               Image Processing
 % CALLING SEQUENCE:
@@ -17,11 +17,11 @@ function res = bpass(image_array,lnoise,lobject,threshold)
 %                       Additive noise averaged over this length should
 %                       vanish. May assume any positive floating value.
 %                       May be set to 0 or false, in which case only the
-%                       highpass "background subtraction" operation is 
+%                       highpass "background subtraction" operation is
 %                       performed.
-%               lobject: (optional) Integer length in pixels somewhat 
-%                       larger than a typical object. Can also be set to 
-%                       0 or false, in which case only the lowpass 
+%               lobject: (optional) Integer length in pixels somewhat
+%                       larger than a typical object. Can also be set to
+%                       0 or false, in which case only the lowpass
 %                       "blurring" operation defined by lnoise is done,
 %                       without the background subtraction defined by
 %                       lobject.  Defaults to false.
@@ -44,13 +44,13 @@ function res = bpass(image_array,lnoise,lobject,threshold)
 % lowpassed image is produced by convolving the original with a boxcar
 % function. By subtracting the boxcar version from the gaussian version, we
 % are using the boxcar version to perform a highpass.
-% 
+%
 % original - lowpassed version of original => highpassed version of the
 % original
-% 
+%
 % Performing a lowpass and a highpass results in a bandpassed image.
-% 
-% Converts input to double.  Be advised that commands like 'image' display 
+%
+% Converts input to double.  Be advised that commands like 'image' display
 % double precision arrays differently from UINT8 arrays.
 
 % MODIFICATION HISTORY:
@@ -59,7 +59,7 @@ function res = bpass(image_array,lnoise,lobject,threshold)
 %               Greatly revised version DGG 5/95.
 %
 %               Added /field keyword JCC 12/95.
-% 
+%
 %               Memory optimizations and fixed normalization, DGG 8/99.
 %               Converted to Matlab by D.Blair 4/2004-ish
 %
@@ -67,7 +67,7 @@ function res = bpass(image_array,lnoise,lobject,threshold)
 %               removed D.B. 6/05
 %
 %               Removed inadvertent image shift ERD 6/05
-% 
+%
 %               Added threshold to output.  Now sets all pixels with
 %               negative values equal to zero.  Gets rid of ringing which
 %               was destroying sub-pixel accuracy, unless window size in
@@ -75,14 +75,14 @@ function res = bpass(image_array,lnoise,lobject,threshold)
 %               accuracy much more robustly ERD 8/24/05
 %
 %               Refactored for clarity and converted all convolutions to
-%               use column vector kernels for speed.  Running on my 
+%               use column vector kernels for speed.  Running on my
 %               macbook, the old version took ~1.3 seconds to do
 %               bpass(image_array,1,19) on a 1024 x 1024 image; this
 %               version takes roughly half that. JWM 6/07
 %
-%       This code 'bpass.pro' is copyright 1997, John C. Crocker and 
+%       This code 'bpass.pro' is copyright 1997, John C. Crocker and
 %       David G. Grier.  It should be considered 'freeware'- and may be
-%       distributed freely in its original form when properly attributed.  
+%       distributed freely in its original form when properly attributed.
 
 if nargin < 3, lobject = false; end
 if nargin < 4, threshold = 0; end
@@ -93,22 +93,22 @@ image_array = double(image_array);
 
 if lnoise == 0
   gaussian_kernel = 1;
-else      
+else
   gaussian_kernel = normalize(...
     exp(-((-ceil(5*lnoise):ceil(5*lnoise))/(2*lnoise)).^2));
 end
 
-if lobject  
+if lobject
   boxcar_kernel = normalize(...
       ones(1,length(-round(lobject):round(lobject))));
 end
-  
+
 % JWM: Do a 2D convolution with the kernels in two steps each.  It is
-% possible to do the convolution in only one step per kernel with 
+% possible to do the convolution in only one step per kernel with
 %
   % gconv = conv2(gaussian_kernel',gaussian_kernel,image_array,'same');
   % bconv = conv2(boxcar_kernel', boxcar_kernel,image_array,'same');
-% 
+%
 % but for some reason, this is slow.  The whole operation could be reduced
 % to a single step using the associative and distributive properties of
 % convolution:
@@ -134,7 +134,7 @@ else
   filtered = gconv;
 end
 
-% Zero out the values on the edges to signal that they're not useful.     
+% Zero out the values on the edges to signal that they're not useful.
 lzero = max(lobject,ceil(5*lnoise));
 
 filtered(1:(round(lzero)),:) = 0;

@@ -1,7 +1,7 @@
 function [c_peaks_threshold,filtered_image,d_peaks,c_peaks]=automatic_detection(filtered_image,raw_image,parameters,stack_count,threshold_d_peaks)
 
 %parameters that determine detection
-p_maximum_size=parameters.max_spot_size; 
+p_maximum_size=parameters.max_spot_size;
 p_SNR=parameters.SNR;
 pkfnd_sz = parameters.pkfnd_sz;
 cntrd_sz = parameters.cntrd_sz;
@@ -32,7 +32,7 @@ cntrd_sz = parameters.cntrd_sz;
     c_peaks_threshold = c_peaks_threshold(1:jj-1,:);
 
     if size(c_peaks_threshold,1)>0
-      
+
     % optional plot of SNR on images
     if parameters.interactive == 1
 
@@ -48,14 +48,8 @@ cntrd_sz = parameters.cntrd_sz;
         c_peaks_threshold = 0;
         c_peaks = 0;
     end
-    
+
     else
         c_peaks_threshold = 0;
         c_peaks = 0;
     end
-    
-
-
-    
-
-    

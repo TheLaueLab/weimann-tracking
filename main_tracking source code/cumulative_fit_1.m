@@ -21,8 +21,8 @@ D=lsqnonlin(@(D) D(2)*(1-exp(-x.^2/(4*D(1)*t))) -y,[param_guess],[0,0],[1.5,1.5]
 param = D;
 
 %%%Plot Fit result
-g1=param(2)*(1-exp(-x.^2/(4*param(1)*dt))); 
-%g2=param_guess(2)*(1-exp(-x.^2/(4*param_guess(1)*dt))); 
+g1=param(2)*(1-exp(-x.^2/(4*param(1)*dt)));
+%g2=param_guess(2)*(1-exp(-x.^2/(4*param_guess(1)*dt)));
 hold all;
 plot(x,g1);
 
@@ -35,13 +35,13 @@ xlabel('Displacement [um]','fontsize',12,'fontweight','b')
 %coefficient number is known beforehand
 
 Columns = ['A','C','E','G','I','K','M','O','Q'];
-    
+
 diffCoeff = param(1);
 whichXLrow = strcat(Columns(ndir),num2str(multStacks));
 disp (whichXLrow);
 xlswrite(strcat(parameters.exp_name,'/Diffusion.xlsx'),diffCoeff,1,whichXLrow);
 
-hold off; 
+hold off;
 
 %calculate fit statistics
 residual = y - g1;
@@ -62,7 +62,3 @@ xlabel('Displacement [um]','fontsize',12,'fontweight','b')
 param_out = param(1);
 
 end
-
-
-
-

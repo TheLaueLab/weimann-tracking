@@ -25,7 +25,7 @@ param = D;
 if interactive == 1
 %%Plot Fit result
 a_fit = min(a):0.001:max(a);
-g1=param(2)*a_fit./(2*param(1)*t).*exp(-a_fit.^2./(4*param(1)*t)); 
+g1=param(2)*a_fit./(2*param(1)*t).*exp(-a_fit.^2./(4*param(1)*t));
 g2=param(4)*a_fit./(2*param(3)*t).*exp(-a_fit.^2./(4*param(3)*t));
 fit = g1 + g2;
 
@@ -58,7 +58,7 @@ legend('Histogram of Distribution','Fit',2);
 title(['D_1 = ', Print_two_digits(param(1)), ' {\mu}m^2*s^{-1}', ', f_1 = ', Print_two_digits(param(3)), ', D_2 = ', Print_two_digits(param(2)), ' {\mu}m^2*s^{-1}']);
 ylabel('Frequency','fontsize',12,'fontweight','b')
 xlabel('Displacement [um]','fontsize',12,'fontweight','b')
-hold off; 
+hold off;
 
 residual = b - fit_for_stats;
 
@@ -72,5 +72,3 @@ xlabel('Displacement [um]','fontsize',12,'fontweight','b')
 end
 
 end
-
-

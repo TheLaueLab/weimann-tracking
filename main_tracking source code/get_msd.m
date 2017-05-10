@@ -5,7 +5,7 @@ function [msd_temp,se_temp,grad,err_grad,offset,err_offset] = get_msd(time,x,y,p
 
 length_track = size(x,1);
 max_step = parameters.step;
-pixel_size = parameters.PixelSize/1000;  
+pixel_size = parameters.PixelSize/1000;
 bool_D = parameters.bool_D;
 dt = parameters.time(ndir)/1000; %in [s]
 msd_temp = [];
@@ -49,8 +49,8 @@ length_track=length_track + length(find(time_new==-1));
 t_step = [1:step].*dt;
 
 for t = 1:step,
-    
-    
+
+
 
     xs = x_new(1:length_track-t);
     ys = y_new(1:length_track-t);
@@ -61,7 +61,7 @@ for t = 1:step,
     %d=sqrt(d);
     %exclude all empty frames labelled with 1000 from analysis
     %the idea is here, that the differences between real spots will never
-    %reach (500*pixel_size)^2, since the size of the image is given as 512*256 
+    %reach (500*pixel_size)^2, since the size of the image is given as 512*256
     d = d(d<(500*pixel_size)^2);
     msd_temp(:,t) = mean(d);
 
@@ -102,9 +102,7 @@ end
 % Variance  and error  are calculated according to the formulas derived
 % in Qian et al.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% 
-% variance(k,1) = ((msd(k,1).*msd(k,1)).*(2*k*k+1))./(3*k*(mnpt - k + 1)); 
+%
+%
+% variance(k,1) = ((msd(k,1).*msd(k,1)).*(2*k*k+1))./(3*k*(mnpt - k + 1));
 % std_var(k,1) = sqrt(variance(k,1));
-
-

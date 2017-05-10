@@ -5,11 +5,11 @@ function [out]=cntrd_adapted(im,im_original,mx,sz,interactive)
 %with the radius of this area defined by the centroid function out(:,4).
 %(Laura Weimann).
 %The background area is chosen by default to be window around the
-%spot with diameter 2*(sz+2). All pixels which belong to neighbouring spots 
-%are declined for analysis. 
+%spot with diameter 2*(sz+2). All pixels which belong to neighbouring spots
+%are declined for analysis.
 
 
-% OUT:  a N x 7 array containing, x, y and brightness for each centroid 
+% OUT:  a N x 7 array containing, x, y and brightness for each centroid
 %           out(:,1) is the x-coordinates
 %           out(:,2) is the y-coordinates
 %           out(:,3) is the max_brightness of filtered image
@@ -23,33 +23,33 @@ function [out]=cntrd_adapted(im,im_original,mx,sz,interactive)
 
 %Adapted from
 % out=cntrd(im,mx,sz,interactive)
-% 
+%
 % PURPOSE:  calculates the centroid of bright spots to sub-pixel accuracy.
 %  Inspired by Grier & Crocker's feature for IDL, but greatly simplified and optimized
 %  for matlab
-% 
+%
 % INPUT:
 % im: image to process, particle should be bright spots on dark background with little noise
 %   ofen an bandpass filtered brightfield image or a nice fluorescent image
 %
 % mx: locations of local maxima to pixel-level accuracy from pkfnd.m
 %
-% sz: diamter of the window over which to average to calculate the centroid.  
+% sz: diamter of the window over which to average to calculate the centroid.
 %     should be big enough
-%     to capture the whole particle but not so big that it captures others.  
+%     to capture the whole particle but not so big that it captures others.
 %     if initial guess of center (from pkfnd) is far from the centroid, the
 %     window will need to be larger than the particle size.  RECCOMMENDED
 %     size is the long lengthscale used in bpass plus 2.
-%     
 %
-% interactive:  OPTIONAL INPUT set this variable to one and it will show you the image used to calculate  
+%
+% interactive:  OPTIONAL INPUT set this variable to one and it will show you the image used to calculate
 %    each centroid, the pixel-level peak and the centroid
 %
 % NOTE:
 %  - if pkfnd, and cntrd return more then one location per particle then
 %  you should try to filter your input more carefully.  If you still get
 %  more than one peak for particle, use the optional sz parameter in pkfnd
-%  - If you want sub-pixel accuracy, you need to have a lot of pixels in your window (sz>>1). 
+%  - If you want sub-pixel accuracy, you need to have a lot of pixels in your window (sz>>1).
 %    To check for pixel bias, plot a histogram of the fractional parts of the resulting locations
 %  - It is HIGHLY recommended to run in interactive mode to adjust the parameters before you
 %    analyze a bunch of images.
@@ -72,13 +72,13 @@ function [out]=cntrd_adapted(im,im_original,mx,sz,interactive)
 %  ERD 8/24/05  Woops!  That last one was a red herring.  The real problem
 %  is the "ringing" from the output of bpass.  I fixed bpass (see note),
 %  and no longer need this kludge.  Also, made it quite nice if mx=[];
-%  ERD 6/06  Added size and brightness output ot interactive mode.  Also 
+%  ERD 6/06  Added size and brightness output ot interactive mode.  Also
 %   fixed bug in calculation of rg^2
-%  JWM 6/07  Small corrections to documentation 
+%  JWM 6/07  Small corrections to documentation
 
 
 if nargin==3
-   interactive=0; 
+   interactive=0;
 end
 
 if sz/2 == floor(sz/2)
@@ -141,28 +141,28 @@ pts=[];
     region4background = 20;
     temp4Background1 = im_original(1:region4background,1:region4background);
     temp4Background2 = im_original((size(im_original,1)-region4background):size(im_original,1)-1,1:region4background);
-    temp4Background3 = im_original(1:region4background,(size(im_original,2)-region4background):size(im_original,2)-1);    
-    temp4Background4 = im_original((size(im_original,1)-region4background):size(im_original,1)-1,(size(im_original,2)-region4background):size(im_original,2)-1);    
-    
+    temp4Background3 = im_original(1:region4background,(size(im_original,2)-region4background):size(im_original,2)-1);
+    temp4Background4 = im_original((size(im_original,1)-region4background):size(im_original,1)-1,(size(im_original,2)-region4background):size(im_original,2)-1);
+
     Background_4 = [temp4Background1(:) temp4Background2(:) temp4Background3(:) temp4Background4(:)];
     Background = Background_4(:);
     Background = Background(Background>0);
     mean4BN = mean(Background);
     std4BN = std(Background);
-    
+
     %same for filtered data
     region4background = 20;
     temp4Background1 = im(1:region4background,1:region4background);
     temp4Background2 = im((size(im,1)-region4background):size(im,1)-1,1:region4background);
-    temp4Background3 = im(1:region4background,(size(im,2)-region4background):size(im,2)-1);    
-    temp4Background4 = im((size(im,1)-region4background):size(im,1)-1,(size(im,2)-region4background):size(im,2)-1);    
-    
+    temp4Background3 = im(1:region4background,(size(im,2)-region4background):size(im,2)-1);
+    temp4Background4 = im((size(im,1)-region4background):size(im,1)-1,(size(im,2)-region4background):size(im,2)-1);
+
     Background_4_fil = [temp4Background1(:) temp4Background2(:) temp4Background3(:) temp4Background4(:)];
     Background_fil = Background_4_fil(:);
     Background_fil = Background_fil(Background_fil>0);
     mean4BN_fil = mean(Background_fil);
-    std4BN_fil = std(Background_fil);    
-    
+    std4BN_fil = std(Background_fil);
+
     %threshold = mean4BN_fil + parameters.fix_threshold*std4BN_fil;
 
 
@@ -190,16 +190,16 @@ for i=1:nmx
 %     %calculate the radius of gyration^2
 %     %rg=(sum(sum(tmp.*dst2))/ndst2);
       rg=(sum(sum(tmp.*dst2))/norm);
-    
+
      %calculate SNR (not local, use global background)
      SNR=(max_intensity-mean4BN_fil)/(sqrt(std4BN_fil^2));
-     SNR_raw=(max_intensity_raw-mean4BN)/(sqrt(std4BN^2));  
-      
+     SNR_raw=(max_intensity_raw-mean4BN)/(sqrt(std4BN^2));
+
     %concatenate it up
     %pts=[pts,[mx(i,1)+xavg-r,mx(i,2)+yavg-r,norm,rg]'];
     %pts=[pts,[x_cm/dx,y_cm/dx]'];
     pts=[pts,[mx(i,1)+xavg-r-1,mx(i,2)+yavg-r-1,max_intensity,rg,max_intensity_raw,SNR,SNR_raw]'];
-    
+
     %OPTIONAL plot things up if you're in interactive mode
     if interactive==1
      imagesc(im)
@@ -216,4 +216,3 @@ end
 
 out=pts';
 out(:,1:2) = out(:,2:-1:1);
-

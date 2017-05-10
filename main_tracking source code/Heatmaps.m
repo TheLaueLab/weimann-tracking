@@ -22,7 +22,7 @@ for count = 1:length(All_TracksT)
         end
     else
         TrackCounted = 0;
-        
+
     end
 end
 
@@ -32,9 +32,8 @@ jump=jump(jump~=0);
 if sum(jump) == 0;
     MeanJD = 0;
 else
-    MeanJD = mean(jump); 
+    MeanJD = mean(jump);
 end
 
-        
-end
 
+end

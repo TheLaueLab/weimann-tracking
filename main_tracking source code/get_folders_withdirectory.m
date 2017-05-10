@@ -15,7 +15,7 @@ else
 for n = 3:length(d),
 
     if d(n).isdir == 1,
-        
+
         a = d(n).name;
         if findstr(a,keyword) >= 1 || findstr('all',keyword) >= 1,
             folders{ii} = d(n).name;
@@ -23,8 +23,8 @@ for n = 3:length(d),
             ii = ii + 1;
 
         end
-        
+
     end
-    
+
 end
 end
