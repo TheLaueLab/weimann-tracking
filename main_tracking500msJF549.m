@@ -76,7 +76,7 @@ for multStacks = 1:1;   %for the number of different frames to analyse within a 
     parameters.exp_name = strcat('Results SPT Analysis/test data set',saveDirVar);
                                                      %defines folder in which results are to be saved,change for each run, as
                                                      %this version is not stable against overwriting results
-    stack_directory = '/Users/srin/Documents/MATLAB/Alex code/test data set';
+    stack_directory = './test data set';
                                                      %defines folder which contains TIFF image stacks to be analysed
     parameters.keyword = 'c';                        %Root name common to all TIFF image stacks to be analysed
     parameters.number_stack_input = 1;               %'How many cells to be analyzed? (put in a number, or "all")'
