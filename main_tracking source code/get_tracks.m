@@ -198,7 +198,9 @@ function [results] = get_tracks(parameters,setup)
                 'MarkerSize',10)
   title(['All cells, Track density per cell over cell per um^2']);
   fName_hist_all = strcat(save_dir,'/','Trackdensity.fig');
-  ylim([0 max(trackdensity_per_cell_allcells)])
+  if max(trackdensity_per_cell_allcells) > 0
+    ylim([0 max(trackdensity_per_cell_allcells)])
+  end
   ylabel('Trackdensity per cell','fontsize',12,'fontweight','b')
   xlabel('Cell index','fontsize',12,'fontweight','b')
   saveas(gcf,fName_hist_all)
@@ -209,7 +211,9 @@ function [results] = get_tracks(parameters,setup)
                 'MarkerSize',10)
   title(['All cells, Mean track length over cell']);
   fName_hist_all = strcat(save_dir,'/','Tracklength.fig');
-  ylim([0 max(Mean_Tracklength_allcells)])
+  if max(Mean_Tracklength_allcells) > 0
+    ylim([0 max(Mean_Tracklength_allcells)])
+  end
   ylabel('Mean track length','fontsize',12,'fontweight','b')
   xlabel('Cell index','fontsize',12,'fontweight','b')
   saveas(gcf,fName_hist_all)
@@ -220,7 +224,9 @@ function [results] = get_tracks(parameters,setup)
                 'MarkerSize',10)
   title(['All cells, mean SNR per track over cell']);
   fName_hist_all = strcat(save_dir,'/','SNR_pertrack.fig');
-  ylim([0 max(Mean_Tracklength_allcells)])
+  if max(Mean_Tracklength_allcells) > 0
+    ylim([0 max(Mean_Tracklength_allcells)])
+  end
   ylabel('mean SNR raw','fontsize',12,'fontweight','b')
   xlabel('Cell index','fontsize',12,'fontweight','b')
   saveas(gcf,fName_hist_all)
