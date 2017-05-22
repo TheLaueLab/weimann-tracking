@@ -45,7 +45,7 @@ function [setup_all]=spot_detection(parameters,stack_directory)
     for stack_count=1:K;
       %%read in data
       fName = stack_files{stack_count};
-      [I,setup.directory,save_dir] = getFluorescentImages_batch(stack_directory,fName,fName,exp_name,interactive,parameters);
+      [I,setup.directory,save_dir] = getFluorescentImages_batch(stack_directory,fName,exp_name,interactive,parameters);
 
       %%setup_cell.directory{stack_count} = setup.directory;
       save_dir_cell{stack_count} = save_dir;

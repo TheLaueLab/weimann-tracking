@@ -1,4 +1,4 @@
-function [I, directory, save_name] = getFluorescentImages_batch(stack_directory, fName, ~, exp_name, interactive, parameters)
+function [I, directory, save_name] = getFluorescentImages_batch(stack_directory, fName, exp_name, interactive, parameters)
 
   file = strcat(stack_directory, '/', fName);
 
