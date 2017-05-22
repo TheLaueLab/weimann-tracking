@@ -45,7 +45,7 @@ function [setup_all]=spot_detection(parameters,stack_directory)
     for stack_count=1:K;
       %%read in data
       fName = stack_files{stack_count};
-      [I,setup.directory,save_dir] = getFluorescentImages_batch(stack_directory,fName,exp_name,interactive,parameters);
+      [I, setup.directory, save_dir] = getFluorescentImages_batch(stack_directory, fName, exp_name, interactive, parameters.startt, parameters.endt);
 
       %%setup_cell.directory{stack_count} = setup.directory;
       save_dir_cell{stack_count} = save_dir;
@@ -103,7 +103,7 @@ function [setup_all]=spot_detection(parameters,stack_directory)
         filtered_image(filtered_image<0)=0;
 
         %%this function detects spots
-        [c_peaks_threshold,~,~,c_peaks] = automatic_detection(filtered_image,I(:,:,t),parameters,stack_count,threshold_d_peaks);
+        [c_peaks_threshold, ~, ~, c_peaks] = automatic_detection(filtered_image, I(:, :, t), stack_count, threshold_d_peaks, parameters.max_spot_size, parameters.SNR, parameters.pkfnd_sz, parameters.cntrd_sz, parameters.interactive);
 
         if c_peaks_threshold==0,                      %no spots are found
           %%Alex: changed this to check if it is zero rather than isempty since isempty didn't work and program crashed when there were no spots detected

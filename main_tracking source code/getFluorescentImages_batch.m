@@ -1,18 +1,16 @@
-function [I, directory, save_name] = getFluorescentImages_batch(stack_directory, fName, exp_name, interactive, parameters)
+function [I, directory, save_name] = getFluorescentImages_batch(stack_directory, fName, exp_name, interactive, T_start, T_end)
 
   file = strcat(stack_directory, '/', fName);
 
   [im, nImage] = tiffread2(file);
 
   %%if only parts of the image should be read
-  if parameters.endt == 0
+  if T_end == 0
     T_end = nImage;
   else
-    T_end = parameters.endt;
     nImage = T_end;
   end
 
-  T_start = parameters.startt;
   nImage = nImage + 1 - T_start;
 
   I = zeros(im(1).height, im(1).width, nImage);
