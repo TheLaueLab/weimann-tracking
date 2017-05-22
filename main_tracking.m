@@ -59,31 +59,24 @@
 %recorded.
 
 
-for multStacks = 1:1; %for the number of different frames to analyse within a video (e.g. 1:4 is when 4 consecutive time series are analysed)
-
-  clearvars -except multStacks
-
+function result = main_tracking()
   addpath('./main_tracking source code');
-  saveDirVar = num2str(multStacks);
-  %%set these according to the start point and end point of the frames to analyse. The number of points must be equal to or larger than multStacks
-  stacks2analyseStart = [1];
-  stacks2analyseEnd = [0];
 
   %%The following parameters need to be adapted in order to read in the data
-  parameters.exp_name = strcat('Results SPT Analysis/test data set',saveDirVar);
+  parameters.exp_name = 'Results SPT Analysis/test data set1';
   %%defines folder in which results are to be saved,change for each run, as
   %%this version is not stable against overwriting results
   stack_directory = './test data set'; %defines folder which contains TIFF image stacks to be analysed
   parameters.keyword = 'c'; %Root name common to all TIFF image stacks to be analysed
   parameters.number_stack_input = 1; %'How many cells to be analyzed? (put in a number, or "all")'
-  parameters.startt = stacks2analyseStart(multStacks); %defines with which image to begin
-  parameters.endt = stacks2analyseEnd(multStacks); %define where to end, if set to 0, the whole image stack in analysed
+  %%set these according to the start point and end point of the frames to analyse.
+  parameters.startt = 1; %defines with which image to begin
+  parameters.endt = 0; %define where to end, if set to 0, the whole image stack in analysed
 
   %%Microcope Setup
   aqRates = [500]; % number of aqRates should be equal to number of videos to analyse e.g.[50, 33] is 2 videos of 50ms then 33ms (but can be more since only a subset will then be used) 96fps=10.41,82fps= 12.2,94fps= 10.64
   parameters.time = aqRates; %acquistion rate: time between acquired images in given image stack in ms
   parameters.PixelSize = 156; %Pixel Size of instrument in nm
-
 
   %%Set the following parameters to identify spots and to form trajectories
   parameters.reanalysis = 0; %reanalysis can be used to get tracks and heatmaps and MSD analysis without having to re aquire spots (very time consuming)set to 1 to reanalyse. simply take the Results.mat and the spot detection folder from the data you want to analyse( and delete the previous tracking results) and put it in a Results SPT Analysis folder.
@@ -163,6 +156,6 @@ for multStacks = 1:1; %for the number of different frames to analyse within a vi
     %%Trajectories are formed and an avi video created showing the results
     [results] = get_tracks(parameters,setup);
     %%MSD and JD analysis of trajectories are performed
-    [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,multStacks);
+    [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,1);
   end
 end

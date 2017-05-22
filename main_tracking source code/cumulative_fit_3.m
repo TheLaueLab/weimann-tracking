@@ -1,4 +1,4 @@
-function [ param_out,shift ] = cumulative_fit_3( jump_all,dt,param_guess,ndir,multStacks,parameters )
+function [ param_out,shift ] = cumulative_fit_3( jump_all,dt,param_guess,ndir,out_row,parameters )
   t=dt;
   jump_all = jump_all/1000; % unit in um
   %%sort jump distances
@@ -42,7 +42,7 @@ function [ param_out,shift ] = cumulative_fit_3( jump_all,dt,param_guess,ndir,mu
   Columns = ['A','G','M','S','Y'];
 
   diffCoeff = [param(1),fraction_1, param(3), fraction_2, param(5)];
-  whichXLrow = strcat(Columns(ndir),num2str(multStacks));
+  whichXLrow = strcat(Columns(ndir),num2str(out_row));
   disp (whichXLrow);
   xlswrite(strcat(parameters.exp_name,'/Diffusion3.xlsx'),diffCoeff,1,whichXLrow);
 
