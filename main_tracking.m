@@ -59,7 +59,14 @@
 %recorded.
 
 
-function result = main_tracking()
+function result = main_tracking(exposure, varargin)
+  p = inputParser;
+  addRequired(p, 'exposure', @isnumeric); % 96fps=10.41, 82fps=12.2, 94fps=10.64
+  addParameter(p, 'start_time', 1, @isnumeric); %defines with which image to begin
+  addParameter(p, 'end_time', 0, @isnumeric); %define where to end, (the whole image stack if 0)
+  addParameter(p, 'min_length', 1, @isnumeric); %defines minimal length of tracks to be kept [frames]
+  parse(p, exposure, varargin{:});
+
   addpath('./main_tracking source code');
 
   %%The following parameters need to be adapted in order to read in the data
@@ -70,11 +77,11 @@ function result = main_tracking()
   parameters.keyword = 'c'; %Root name common to all TIFF image stacks to be analysed
   parameters.number_stack_input = 1; %'How many cells to be analyzed? (put in a number, or "all")'
   %%set these according to the start point and end point of the frames to analyse.
-  parameters.startt = 1; %defines with which image to begin
-  parameters.endt = 0; %define where to end, if set to 0, the whole image stack in analysed
+  parameters.startt = p.Results.start_time;
+  parameters.endt = p.Results.end_time;
 
   %%Microcope Setup
-  aqRates = [500]; % number of aqRates should be equal to number of videos to analyse e.g.[50, 33] is 2 videos of 50ms then 33ms (but can be more since only a subset will then be used) 96fps=10.41,82fps= 12.2,94fps= 10.64
+  aqRates = [p.Results.exposure]; % number of aqRates should be equal to number of videos to analyse e.g.[50, 33] is 2 videos of 50ms then 33ms (but can be more since only a subset will then be used)
   parameters.time = aqRates; %acquistion rate: time between acquired images in given image stack in ms
   parameters.PixelSize = 156; %Pixel Size of instrument in nm
 
@@ -87,14 +94,13 @@ function result = main_tracking()
   parameters.initialthreshold = 0; %threshold for spot detection, number of std above background (recommended: 3-10)
   parameters.SNR = 5; %defines SNR threshold, only spots with higher SNR are kept (recommended: 2-5)
   parameters.max_spot_size = 3; %Maximum Spot Size [radius in pixel]
-  parameters.minLength = 1; %defines minimal length of tracks to be kept [frames]
+  parameters.minLength = p.Results.min_length;
   parameters.max_step = 1; %defines maximal distance at which 2 spots are linked in subsequent frames [pixels]
   parameters.memory = 0; %this is the number of time steps that a particle can be 'lost' and then recovered again [frames]
   parameters.JD = 1; %To get diffusion data based on bigger JD this to eg. JD=1, JD=2, JD=3. Does not currently work for the Heatmaps
 
   %%Set the following parameters to perform MSD/JD analysis
   %%MSD Analysis
-  parameters.threshold_tracklength = (parameters.minLength); %defines minimal length of tracks to be analysed [frames]
   parameters.step = 10; %Number of points for calculating MSD and for fit the single trajectories
   %%small number --> short-term diffusion coefficient
   %%high number  --> long-term diffusion coefficient

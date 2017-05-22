@@ -18,7 +18,7 @@ function [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_
   n_fit = parameters.n_fit;
   plot_average = 1;  %Plots average of D over tracks if set to 1
 
-  threshold_tracklength = parameters.threshold_tracklength;  %defines minimum length of track to be taken into account
+  threshold_tracklength = parameters.minLength;  %defines minimum length of track to be taken into account
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculate MSD for each track
