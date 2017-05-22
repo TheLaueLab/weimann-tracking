@@ -54,13 +54,12 @@
 %an array where the start and end point of analysis is. It will analyse
 %that range of images like it did before.
 
-%Issues I have noticed: Tif stacks with index over 10,001 crashes program.
-%Current solution: Change limit in function Tiffread2 line 61
-%If the last image in stack has no tracks it also crashes the program, even
-%if there are tracks up to that point. eg. image 700 in stack has no tracks
-%(because the cutoff value is higher or because there are no spots) but 695 and 705
-%both have tracks. Running code from eg. 100-700 leads to crash but 100-705
-%or 100-695 are both fine and there may be hundreds of tracks recorded.
+%Issues I have noticed: If the last image in stack has no tracks it crashes the
+%program, even if there are tracks up to that point. eg. image 700 in stack has
+%no tracks (because the cutoff value is higher or because there are no spots)
+%but 695 and 705 both have tracks. Running code from eg. 100-700 leads to crash
+%but 100-705 or 100-695 are both fine and there may be hundreds of tracks
+%recorded.
 
 
 for multStacks = 1:1;   %for the number of different frames to analyse within a video (e.g. 1:4 is when 4 consecutive time series are analysed)
@@ -69,7 +68,7 @@ for multStacks = 1:1;   %for the number of different frames to analyse within a 
 
     addpath('./main_tracking source code');
     saveDirVar = num2str(multStacks);
-    stacks2analyseStart = [1001];    %set these according to the start point and end point of the frames to analyse. The number of points must be equal to or larger than multStacks
+    stacks2analyseStart = [1];    %set these according to the start point and end point of the frames to analyse. The number of points must be equal to or larger than multStacks
     stacks2analyseEnd = [0];
 
     %The following parameters need to be adapted in order to read in the data
@@ -86,7 +85,7 @@ for multStacks = 1:1;   %for the number of different frames to analyse within a 
     %Microcope Setup
     aqRates = [500]; % %number of aqRates should be equal to number of videos to analyse e.g.[50, 33] is 2 videos of 50ms then 33ms (but can be more since only a subset will then be used) 96fps=10.41,82fps= 12.2,94fps= 10.64
     parameters.time = aqRates;                            %acquistion rate: time between acquired images in given image stack in ms
-    parameters.PixelSize = 155;                            %Pixel Size of instrument in nm
+    parameters.PixelSize = 156;                            %Pixel Size of instrument in nm
 
 
     %Set the following parameters to identify spots and to form trajectories
@@ -135,7 +134,7 @@ for multStacks = 1:1;   %for the number of different frames to analyse within a 
     %cumulative plot only is shown
 
     %Set the following parameters to change the output video files
-    parameters.withvideo = 1;                        %set to 1 will create videos of the tracking Results
+    parameters.withvideo = 0;                        %set to 1 will create videos of the tracking Results
     parameters.FBS = '10';                           %defines Frames per second for output videos
 
     %These parameters can be adapted, but are less critical;
@@ -165,10 +164,10 @@ for multStacks = 1:1;   %for the number of different frames to analyse within a 
         load(strcat(parameters.exp_name,'/Results.mat'),'setup');
     end
 
-        if  parameters.interactive == 0
-            %Trajectories are formed and an avi video created showing the results
-            [results] = get_tracks(parameters,setup);
-    %MSD and JD analysis of trajectories are performed
-            [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,multStacks);
-        end
+    if  parameters.interactive == 0
+        %Trajectories are formed and an avi video created showing the results
+        [results] = get_tracks(parameters,setup);
+        %MSD and JD analysis of trajectories are performed
+        [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,multStacks);
+    end
 end
