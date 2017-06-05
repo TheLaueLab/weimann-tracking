@@ -24,11 +24,6 @@ function [ param_out,shift ] = cumulative_fit_1( jump_all,dt,param_guess,ndir,ou
   hold all;
   plot(x,g1);
 
-  legend('Cumulative Histogram','Fit',2);
-  title(['D_1 = ', Print_two_digits(param(1)), ' {\mu}m^2*s^{-1}']);
-  ylabel('Frequency','fontsize',12,'fontweight','b')
-  xlabel('Displacement [um]','fontsize',12,'fontweight','b')
-
   %%write diffusion coefficients into excel (make sure the expected
   %%coefficient number is known beforehand
 
@@ -39,8 +34,6 @@ function [ param_out,shift ] = cumulative_fit_1( jump_all,dt,param_guess,ndir,ou
   disp (whichXLrow);
   xlswrite(strcat(parameters.exp_name,'/Diffusion.xlsx'),diffCoeff,1,whichXLrow);
 
-  hold off;
-
   %%calculate fit statistics
   residual = y - g1;
   square_about_mean = y - mean(y);
@@ -50,12 +43,6 @@ function [ param_out,shift ] = cumulative_fit_1( jump_all,dt,param_guess,ndir,ou
   fit_statistics(1) = SSE;
   fit_statistics(2) = R_square;
   shift=residual(length(g1));
-
-  subplot(2,1,2);plot(x,residual)
-  hold on;
-  plot(x,zeros(length(x),1)')
-  ylabel('Residual','fontsize',12,'fontweight','b')
-  xlabel('Displacement [um]','fontsize',12,'fontweight','b')
 
   param_out = param(1);
 end

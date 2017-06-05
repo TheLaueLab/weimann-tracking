@@ -398,18 +398,11 @@ function [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_
     f_JD_2pop = [];
     f_JD_3pop = [];
 
-    plot_hist_jump1(jump_all,1,dt.*parameters.JD,param_guess1);
-    saveas(gcf,strcat(save_name_JD,'Histogram_fit1'));
     [param] = cumulative_fit_1( jump_all,dt.*parameters.JD,param_guess1,ndir,out_row,parameters );
-    saveas(gcf,strcat(save_name_JD,'Cumulative_fit1'));
-
     D_JD_1pop = param(1);
 
     if parameters.number_populations > 1
-      plot_hist_jump2(jump_all,1,dt.*parameters.JD,param_guess2);
-      saveas(gcf,strcat(save_name_JD,'Histogram_fit2'));
       [param] = cumulative_fit_2(jump_all,dt.*parameters.JD,param_guess2,ndir,out_row,parameters);
-      saveas(gcf,strcat(save_name_JD,'Cumulative_fit2'));
 
       D_JD_2pop = [param(1) param(3)];
       f_JD_2pop = [param(2) param(4)];
@@ -417,7 +410,6 @@ function [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_
 
     if parameters.number_populations > 2
       [param] = cumulative_fit_3( jump_all,dt.*parameters.JD,param_guess3,ndir,out_row,parameters );
-      saveas(gcf,strcat(save_name_JD,'Cumulative_fit3'))
 
       D_JD_3pop = [param(1) param(3) param(5)];
       f_JD_3pop = [param(2) param(4) param(6)];
