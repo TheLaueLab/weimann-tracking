@@ -161,7 +161,7 @@ function [results] = get_tracks(parameters,setup)
     saveas(gcf,fName_hist_all)
 
     savefile = strcat(parameters.exp_name,'/','Tracklength.mat');
-    save(savefile,'length_tracks');
+    save(savefile,'length_tracks','-v7.3');
 
     %%plot histogram of mean track intensities
     if isempty(mean_SNR_raw_track_all) ~= 1
@@ -232,4 +232,4 @@ function [results] = get_tracks(parameters,setup)
   saveas(gcf,fName_hist_all)
 
   savefile = strcat(parameters.exp_name,'/','Results.mat');
-  save(savefile, 'setup','parameters','results');
+  save(savefile, 'setup','parameters','results', '-v7.3');

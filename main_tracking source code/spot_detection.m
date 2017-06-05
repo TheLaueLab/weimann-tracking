@@ -138,7 +138,7 @@ function [setup_all]=spot_detection(parameters,stack_directory)
         %%make TIFF/save coordinates in matlab file if not in interactive mode
         make_tiff(strcat(save_dir,'/raw_image.tif'),I,T)
         savefile4tracking = strcat(save_dir,'/','files4tracking.mat');
-        save(savefile4tracking, 'xyIfilIrawSNRfilSNRraw' )
+        save(savefile4tracking, 'xyIfilIrawSNRfilSNRraw', '-v7.3')
       end
 
       %%calculate mean density
@@ -224,7 +224,7 @@ function [setup_all]=spot_detection(parameters,stack_directory)
 
   if interactive == 0
     savefile = strcat(parameters.exp_name,'/','Results.mat');
-    save(savefile, 'setup', 'parameters');
+    save(savefile, 'setup', 'parameters', '-v7.3');
   end
 
   if interactive == 0 && K > 1

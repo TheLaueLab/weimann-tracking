@@ -438,7 +438,7 @@ function [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_
 
     %%save files
     savefile = strcat(parameters.exp_name,'/','Results.mat');
-    save(savefile, 'setup','parameters','results');
+    save(savefile, 'setup','parameters','results', '-v7.3');
   end
 
 end
