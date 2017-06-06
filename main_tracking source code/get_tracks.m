@@ -74,11 +74,11 @@ function [results] = get_tracks(parameters,setup)
 
     Results_final=Results_final';
 
+    length_tracks = [];
     %%applying of track funtion
     if ~isempty(Results_final)
       result_tracks=track(Results_final,parameters.max_step,param);
 
-      length_tracks = [];
       if ~isempty(result_tracks)
         %%add I raw, SNR fil, SNR raw to result_tracks
         i_result_tracks = length(find(result_tracks(result_tracks(:,1)~=0)));
@@ -123,16 +123,7 @@ function [results] = get_tracks(parameters,setup)
         title(['Trajectory Ensemble']);
         fName_hist_all = strcat(save_dir,'/','Trajectory Ensemble.fig');
         saveas(gcf,fName_hist_all)
-
-      else
-        errordlg('Choose a different end point for parameters.endt','Track error');
-        clear all;
-        return;
-        length_tracks = 0;
       end
-
-    else
-      length_tracks = 0;
     end
 
 
@@ -189,6 +180,7 @@ function [results] = get_tracks(parameters,setup)
 
   results.meanSNRrawpertrack = mean_SNR_raw_track_allcells;
   results.meantracklength = Mean_Tracklength_allcells;
+  results.ntracks = length(length_tracks);
 
   save_dir = strcat(parameters.exp_name,'/','spot detection Results');
 

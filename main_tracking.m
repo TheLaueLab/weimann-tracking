@@ -162,7 +162,7 @@ function result = main_tracking(exposure, varargin)
     %%Trajectories are formed and an avi video created showing the results
     [results] = get_tracks(parameters,setup);
     %%MSD and JD analysis of trajectories are performed
-    if parameters.minLength > 1
+    if parameters.minLength > 1 & results.ntracks > 0
       [results] = msd_jd_analysis_localisation(parameters,param_guess1,param_guess2,param_guess3,results,setup,1);
     end
   end
