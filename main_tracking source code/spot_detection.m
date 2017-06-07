@@ -54,6 +54,10 @@ function [setup_all]=spot_detection(parameters,stack_directory)
 
     [H,W,T] = size(I);
 
+    if T < 1
+      continue
+    end
+
     setup.M = H;
     setup.N = W;
     setup.K = T;

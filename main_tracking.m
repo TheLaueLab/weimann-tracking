@@ -158,7 +158,7 @@ function result = main_tracking(exposure, varargin)
     load(strcat(parameters.exp_name,'/Results.mat'),'setup');
   end
 
-  if  parameters.interactive == 0
+  if parameters.interactive == 0 & setup.K
     %%Trajectories are formed and an avi video created showing the results
     [results] = get_tracks(parameters,setup);
     %%MSD and JD analysis of trajectories are performed
